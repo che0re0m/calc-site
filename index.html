@@ -14,6 +14,7 @@
       --accent-2: #8bd3ff;
       --border: #2a3240;
       --good: #9fe6a0;
+      --warn: #ffd166;
     }
     * { box-sizing: border-box; }
     body {
@@ -47,33 +48,32 @@
     .person { background: #151b25; border: 1px solid #2a3240; border-radius: 12px; padding: 12px; }
     .person-title { font-size: 14px; font-weight: 700; color: var(--muted); margin-bottom: 8px; }
 
-    /* 옵션 라인: 라벨 | 가격(데스크톱 120px 고정) | 선택 아이콘 */
+    /* 옵션 라인: 라벨 | 가격(데스크톱 110px 고정) | 선택 아이콘 */
     label.option {
       position: relative;
       display: grid;
-      grid-template-columns: 1fr 120px 24px;
-      column-gap: 10px;
+      grid-template-columns: 1fr 110px 24px;
+      column-gap: 6px;
       align-items: center;
-      padding: 10px 0;        /* 박스 제거 */
+      padding: 10px 0;  /* 박스 제거 */
       background: transparent;
       border: 0;
       border-radius: 0;
       width: 100%;
       font-size: 14px;
     }
-    /* 항목 텍스트 줄바꿈 방지(열 밀림 방지) */
     label.option > span:first-child {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-    /* divider: 레이아웃 영향 없이 절대배치(좌우 인셋 포함) */
+    /* divider: 좌우 인셋 0(행 패딩과 동일) */
     .radio-group .option + .option::before,
     .checkbox-group .option + .option::before {
       content: "";
       position: absolute;
-      left: 8px;
-      right: 8px;
+      left: 0;
+      right: 0;
       top: 0;
       height: 1px;
       background: #2a3446;
@@ -81,8 +81,8 @@
     .option .price {
       color: var(--muted);
       font-size: 14px;
-      width: 120px;
-      min-width: 120px;
+      width: 110px;
+      min-width: 110px;
       text-align: left;
     }
     label.option input[type="radio"],
@@ -104,14 +104,21 @@
     .result { padding: 6px; }
     .total-line {
       display: grid;
-      grid-template-columns: 1fr auto;
+      grid-template-columns: 1fr auto 28px;
       align-items: baseline;
-      gap: 12px;
+      gap: 8px;
       font-weight: 800;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
     .total-line .label { color: #b9cbe0; }
     .total-line .value { font-size: 24px; color: var(--good); }
+    .summary-btn {
+      background: transparent; border: 0; color: #b9cbe0; cursor: pointer; font-size: 16px;
+      padding: 2px; line-height: 1; transform: rotate(0deg); transition: transform .15s ease;
+    }
+    .summary-btn[aria-expanded="true"] { transform: rotate(180deg); }
+    .summary { display: none; color: #cfe6ff; font-size: 13px; margin: 2px 0 10px; }
+    .summary.open { display: block; }
     .divider {
       height: 1px;
       background: #2b3b52;
@@ -120,6 +127,12 @@
       opacity: .9;
     }
     .kicker { color: var(--muted); font-size: 12px; margin-top: 4px; }
+
+    .hint {
+      color: var(--warn);
+      font-size: 12px;
+      margin: 6px 0 0 2px;
+    }
 
     .people-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 
@@ -158,11 +171,11 @@
         <div class="section-title" style="margin-top:14px;">추가금</div>
         <div class="options">
           <fieldset>
-            <legend>컨펌 추가</legend>
+            <legend>컨펌</legend>
             <div class="radio-group" id="optionD">
               <label class="option"><span>없음</span><span class="price">+0원</span><input type="radio" name="D" value="0" checked></label>
-              <label class="option"><span>1회 추가</span><span class="price">+1,000원</span><input type="radio" name="D" value="1000"></label>
-              <label class="option"><span>2회 추가</span><span class="price">+2,500원</span><input type="radio" name="D" value="2500"></label>
+              <label class="option"><span>1회</span><span class="price">+1,000원</span><input type="radio" name="D" value="1000"></label>
+              <label class="option"><span>2회</span><span class="price">+2,500원</span><input type="radio" name="D" value="2500"></label>
             </div>
           </fieldset>
 
@@ -185,7 +198,7 @@
           </fieldset>
 
           <fieldset>
-            <legend>가산</legend>
+            <legend>샘플 비공개/빠른 마감</legend>
             <div class="checkbox-group">
               <label class="option"><span>샘플 비공개</span><span class="price">+기본합계의 10%</span><input type="checkbox" id="optI" /></label>
               <label class="option"><span>48시간 빠른 마감</span><span class="price">+기본합계의 50%</span><input type="checkbox" id="optJ" /></label>
@@ -199,10 +212,13 @@
           <div class="total-line">
             <span class="label">총액</span>
             <span id="total" class="value">0원</span>
+            <button id="toggleSummary" class="summary-btn" aria-expanded="false" aria-controls="summary">▾</button>
           </div>
+          <div id="summary" class="summary"></div>
           <div class="divider"></div>
           <div class="kicker">모든 금액은 KRW(원) 기준입니다.</div>
           <div class="kicker">사이트에 오류가 있다면 메시지 주세요.</div>
+          <div class="kicker">최종 금액은 협의에 따라 변동될 수 있습니다.</div>
         </div>
       </div>
     </div>
@@ -219,6 +235,7 @@
             <label class="option"><span>반신1(허리)</span><span class="price">13,000원</span><input type="radio" value="13000"></label>
             <label class="option"><span>반신2(허벅지)</span><span class="price">16,000원</span><input type="radio" value="16000"></label>
           </div>
+          <div class="hint size-hint" style="display:none;"></div>
         </fieldset>
         <fieldset>
           <legend>방식</legend>
@@ -227,6 +244,7 @@
             <label class="option"><span>컬러만</span><span class="price">+2,000원</span><input type="radio" value="2000"></label>
             <label class="option"><span>명암만</span><span class="price">+2,000원</span><input type="radio" value="2000"></label>
           </div>
+          <div class="hint style-hint" style="display:none;"></div>
         </fieldset>
       </div>
     </div>
@@ -234,12 +252,17 @@
 
   <script>
     const KRW = (n) => `${Math.round(n).toLocaleString('ko-KR')}원`;
+    const KRWn = (n) => Math.round(n).toLocaleString('ko-KR');
+
+    const STORAGE_KEY = 'calcState_v3';
 
     const prices = { F: 1000, G: 1000, H: 1500 };
 
     const personCountEl = document.getElementById('personCount');
     const personsContainer = document.getElementById('personsContainer');
     const totalEl = document.getElementById('total');
+    const summaryEl = document.getElementById('summary');
+    const toggleSummaryBtn = document.getElementById('toggleSummary');
 
     function renderPersons(count) {
       personsContainer.innerHTML = '';
@@ -262,7 +285,7 @@
       const style = personNode.querySelector('.style-group input[type="radio"]:checked');
       const a = size ? Number(size.value) : 0;
       const b = style ? Number(style.value) : 0;
-      return a + b;
+      return { a, b, sum: a + b, hasSize: !!size, hasStyle: !!style };
     }
 
     function getFixedCosts() {
@@ -271,16 +294,49 @@
       const f = document.getElementById('optF').checked ? prices.F : 0;
       const g = document.getElementById('optG').checked ? prices.G : 0;
       const h = document.getElementById('optH').checked ? prices.H : 0;
-      return d + e + f + g + h;
+      return { d, e, f, g, h, n: d + e + f + g + h };
+    }
+
+    function validateRequired() {
+      const personNodes = personsContainer.querySelectorAll('.person');
+      let ok = true;
+      personNodes.forEach(node => {
+        const { hasSize, hasStyle } = getPersonCost(node);
+        const sizeHint = node.querySelector('.size-hint');
+        const styleHint = node.querySelector('.style-hint');
+        if (!hasSize) {
+          sizeHint.textContent = '사이즈를 선택해 주세요.';
+          sizeHint.style.display = 'block';
+          ok = false;
+        } else sizeHint.style.display = 'none';
+        if (!hasStyle) {
+          styleHint.textContent = '방식을 선택해 주세요.';
+          styleHint.style.display = 'block';
+          ok = false;
+        } else styleHint.style.display = 'none';
+      });
+      return ok;
+    }
+
+    function buildSummary(m, fixed, base, iChecked, jChecked, total) {
+      const terms = [`기본 ${KRWn(m)}`];
+      if (fixed.e) terms.push(`배경 ${KRWn(fixed.e)}`);
+      if (fixed.d) terms.push(`컨펌 ${KRWn(fixed.d)}`);
+      if (fixed.f) terms.push(`투명화 ${KRWn(fixed.f)}`);
+      if (fixed.g) terms.push(`유혈 ${KRWn(fixed.g)}`);
+      if (fixed.h) terms.push(`편집 ${KRWn(fixed.h)}`);
+      if (iChecked) terms.push('샘플 10%');
+      if (jChecked) terms.push('마감 50%');
+      return `${terms.join(' + ')} = ${KRW(total)}`;
     }
 
     function computeAndRender() {
       const personNodes = personsContainer.querySelectorAll('.person');
       let m = 0;
-      personNodes.forEach(node => { m += getPersonCost(node); });
+      personNodes.forEach(node => { m += getPersonCost(node).sum; });
 
-      const n = getFixedCosts();
-      const base = m + n;
+      const fixed = getFixedCosts();
+      const base = m + fixed.n;
 
       const iChecked = document.getElementById('optI').checked;
       const jChecked = document.getElementById('optJ').checked;
@@ -289,6 +345,72 @@
       const total = base + addI + addJ;
 
       totalEl.textContent = KRW(total);
+      summaryEl.textContent = buildSummary(m, fixed, base, iChecked, jChecked, total);
+
+      validateRequired();
+      saveState();
+    }
+
+    function saveState() {
+      const state = { personCount: Number(personCountEl.value), persons: [] };
+      const count = state.personCount;
+      for (let i = 1; i <= count; i++) {
+        const size = document.querySelector(`input[name="A_${i}"]:checked`);
+        const style = document.querySelector(`input[name="B_${i}"]:checked`);
+        state.persons.push({
+          size: size ? Number(size.value) : null,
+          style: style ? Number(style.value) : null
+        });
+      }
+      const d = document.querySelector('#optionD input[type="radio"]:checked');
+      const e = document.querySelector('#optionE input[type="radio"]:checked');
+      state.D = d ? Number(d.value) : 0;
+      state.E = e ? Number(e.value) : 0;
+      state.F = document.getElementById('optF').checked;
+      state.G = document.getElementById('optG').checked;
+      state.H = document.getElementById('optH').checked;
+      state.I = document.getElementById('optI').checked;
+      state.J = document.getElementById('optJ').checked;
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function restoreState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const s = JSON.parse(raw);
+        if (!s || !s.personCount) return;
+
+        personCountEl.value = String(Math.max(1, Math.min(5, s.personCount)));
+        renderPersons(Number(personCountEl.value));
+
+        // restore per person
+        s.persons?.forEach((p, idx) => {
+          const i = idx + 1;
+          if (p?.size != null) {
+            const r = document.querySelector(`input[name="A_${i}"][value="${p.size}"]`);
+            if (r) r.checked = true;
+          }
+          if (p?.style != null) {
+            const r = document.querySelector(`input[name="B_${i}"][value="${p.style}"]`);
+            if (r) r.checked = true;
+          }
+        });
+
+        // restore fixed options
+        const d = document.querySelector(`#optionD input[value="${s.D ?? 0}"]`);
+        if (d) d.checked = true;
+        const e = document.querySelector(`#optionE input[value="${s.E ?? 0}"]`);
+        if (e) e.checked = true;
+        document.getElementById('optF').checked = !!s.F;
+        document.getElementById('optG').checked = !!s.G;
+        document.getElementById('optH').checked = !!s.H;
+        document.getElementById('optI').checked = !!s.I;
+        document.getElementById('optJ').checked = !!s.J;
+      } catch (_) {
+        // ignore corrupted state
+      }
     }
 
     personCountEl.addEventListener('change', () => {
@@ -301,7 +423,15 @@
       if (e.target.matches('input, select')) computeAndRender();
     });
 
+    toggleSummaryBtn.addEventListener('click', () => {
+      const open = toggleSummaryBtn.getAttribute('aria-expanded') === 'true';
+      toggleSummaryBtn.setAttribute('aria-expanded', String(!open));
+      summaryEl.classList.toggle('open', !open);
+    });
+
+    // init
     renderPersons(1);
+    restoreState();
     computeAndRender();
   </script>
 </body>
