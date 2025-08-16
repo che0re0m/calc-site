@@ -42,10 +42,13 @@
     .pill { display: inline-block; background: #223049; color: var(--accent-2); border: 1px solid #2d3c57; padding: 2px 8px; border-radius: 999px; font-size: 12px; margin-left: 6px; }
     .options { display: grid; gap: 8px; }
     fieldset { border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; margin: 0; }
-    legend { padding: 0 8px; color: var(--muted); font-size: 12px; }
+    /* 항목 제목(인원1/컨펌 추가/배경/추가 옵션/가산) 가독성 ↑ */
+    legend { padding: 0 8px; color: var(--muted); font-size: 14px; font-weight: 700; }
     .radio-group, .checkbox-group { display: grid; gap: 6px; margin-top: 6px; }
+    .person { background: #151b25; border: 1px solid #2a3240; border-radius: 12px; padding: 12px; }
+    .person-title { font-size: 14px; font-weight: 700; color: var(--muted); margin-bottom: 8px; }
 
-    /* 가격 X좌표 정렬: 라벨 | 가격(120px) | 선택 아이콘 */
+    /* 옵션 라인: 라벨 | 가격(120px) | 선택 아이콘, 폰트 크기 통일 */
     label.option {
       display: grid;
       grid-template-columns: 1fr 120px 24px;
@@ -58,11 +61,12 @@
       cursor: pointer;
       transition: border-color .15s ease;
       width: 100%;
+      font-size: 14px; /* 텍스트와 금액 동일 크기 */
     }
     label.option:hover { border-color: #334158; }
     .option .price {
       color: var(--muted);
-      font-size: 13px;
+      font-size: 14px; /* 텍스트와 금액 동일 크기 */
       width: 120px;
       min-width: 120px;
       text-align: left;
@@ -72,29 +76,33 @@
       justify-self: end;
       transform: translateY(1px);
     }
-
     select {
       background: #1a202a; color: var(--text); border: 1px solid #2a3446;
       border-radius: 10px; padding: 10px 12px; font: inherit;
     }
 
-    /* 우측 스티키 카드: 박스 1개만 */
-    .result { padding: 4px; }
+    /* 우측 스티키(단일 박스) */
+    .result { padding: 6px; }
     .total-line {
       display: grid;
       grid-template-columns: 1fr auto;
       align-items: baseline;
       gap: 12px;
       font-weight: 800;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
     .total-line .label { color: #b9cbe0; }
     .total-line .value { font-size: 24px; color: var(--good); }
-    .kicker { color: var(--muted); font-size: 12px; margin-top: 6px; }
+    .divider {
+      height: 1px;
+      background: #2b3b52;
+      border: 0;
+      margin: 12px 0 10px;
+      opacity: .9;
+    }
+    .kicker { color: var(--muted); font-size: 12px; margin-top: 4px; }
 
     .people-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-    .person { background: #151b25; border: 1px solid #2a3240; border-radius: 12px; padding: 12px; }
-    .person-title { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
 
     /* 우측 결과 카드 스티키 고정 */
     @media (min-width: 860px) {
@@ -170,6 +178,7 @@
             <span class="label">총액</span>
             <span id="total" class="value">0원</span>
           </div>
+          <div class="divider"></div>
           <div class="kicker">모든 금액은 KRW(원) 기준입니다.</div>
           <div class="kicker">사이트에 오류가 있다면 메시지 주세요.</div>
         </div>
