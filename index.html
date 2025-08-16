@@ -44,34 +44,53 @@
     fieldset { border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; margin: 0; }
     legend { padding: 0 8px; color: var(--muted); font-size: 12px; }
     .radio-group, .checkbox-group { display: grid; gap: 6px; margin-top: 6px; }
+
+    /* 가격 X좌표 정렬: 라벨 | 가격(120px) | 선택 아이콘 */
     label.option {
-      display: flex; justify-content: space-between; align-items: center; gap: 10px;
-      background: #1a202a; border: 1px solid #2a3446; border-radius: 10px; padding: 10px 12px; cursor: pointer; transition: border-color .15s ease;
+      display: grid;
+      grid-template-columns: 1fr 120px 24px;
+      column-gap: 10px;
+      align-items: center;
+      background: #1a202a;
+      border: 1px solid #2a3446;
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: border-color .15s ease;
       width: 100%;
     }
     label.option:hover { border-color: #334158; }
-    .option .price { color: var(--muted); font-size: 13px; text-align: left; width: 120px; min-width: 120px; }
-    input[type="radio"], input[type="checkbox"] { transform: translateY(1px); }
-    select { background: #1a202a; color: var(--text); border: 1px solid #2a3446; border-radius: 10px; padding: 10px 12px; font: inherit; }
+    .option .price {
+      color: var(--muted);
+      font-size: 13px;
+      width: 120px;
+      min-width: 120px;
+      text-align: left;
+    }
+    label.option input[type="radio"],
+    label.option input[type="checkbox"] {
+      justify-self: end;
+      transform: translateY(1px);
+    }
 
-    /* 우측 결과 박스 */
-    .result {
-      background: linear-gradient(180deg, #162233 0%, #111824 100%);
-      border: 1px solid #2b3b52;
-      border-radius: 14px;
-      padding: 14px;
+    select {
+      background: #1a202a; color: var(--text); border: 1px solid #2a3446;
+      border-radius: 10px; padding: 10px 12px; font: inherit;
     }
-    .total {
-      margin-top: 4px;
-      padding: 14px;
-      border-radius: 12px;
-      background: #19263a;
-      border: 1px solid #2b3b52;
-      display: flex; justify-content: space-between; align-items: baseline;
+
+    /* 우측 스티키 카드: 박스 1개만 */
+    .result { padding: 4px; }
+    .total-line {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: baseline;
+      gap: 12px;
+      font-weight: 800;
+      margin-bottom: 8px;
     }
-    .total .label { color: #b9cbe0; font-weight: 700; }
-    .total .value { font-size: 24px; color: var(--good); font-weight: 800; }
-    .kicker { color: var(--muted); font-size: 12px; margin-top: 10px; }
+    .total-line .label { color: #b9cbe0; }
+    .total-line .value { font-size: 24px; color: var(--good); }
+    .kicker { color: var(--muted); font-size: 12px; margin-top: 6px; }
 
     .people-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
     .person { background: #151b25; border: 1px solid #2a3240; border-radius: 12px; padding: 12px; }
@@ -147,7 +166,7 @@
 
       <div class="card">
         <div class="result">
-          <div class="total">
+          <div class="total-line">
             <span class="label">총액</span>
             <span id="total" class="value">0원</span>
           </div>
