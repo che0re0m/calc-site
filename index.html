@@ -47,27 +47,27 @@
     .person { background: #151b25; border: 1px solid #2a3240; border-radius: 12px; padding: 12px; }
     .person-title { font-size: 14px; font-weight: 700; color: var(--muted); margin-bottom: 8px; }
 
-    /* 항목 라인: 라벨 | 가격(120px) | 선택 아이콘 */
+    /* 옵션 라인: 라벨 | 가격 | 선택 아이콘 */
     label.option {
       display: grid;
-      grid-template-columns: 1fr 120px 24px;
+      grid-template-columns: 1fr 120px 24px; /* 데스크톱: 가격 열 고정 120px */
       column-gap: 10px;
       align-items: center;
-      padding: 10px 0;           /* 박스 제거: 배경/테두리 없음 */
+      padding: 10px 0;           /* 박스 제거 */
       background: transparent;
       border: 0;
       border-radius: 0;
       width: 100%;
       font-size: 14px;
     }
-    /* 구분선: 각 항목 사이, 좌우 여백(패딩) 효과 */
+    /* 항목 간 divider (좌우 인셋) */
     .radio-group .option + .option::before,
     .checkbox-group .option + .option::before {
       content: "";
       display: block;
       height: 1px;
       background: #2a3446;
-      margin: 6px 8px 10px;      /* 좌우 8px 인셋 */
+      margin: 6px 8px 10px;      /* 좌우 패딩 효과 */
     }
     .option .price {
       color: var(--muted);
@@ -84,6 +84,14 @@
     select {
       background: #1a202a; color: var(--text); border: 1px solid #2a3446;
       border-radius: 10px; padding: 10px 12px; font: inherit;
+    }
+
+    /* 반응형: 작은 화면에서는 가격 열 자동폭 + 우측정렬 */
+    @media (max-width: 560px) {
+      label.option { grid-template-columns: 1fr auto 24px; }
+      .option .price { width: auto; min-width: 0; text-align: right; }
+      .radio-group .option + .option::before,
+      .checkbox-group .option + .option::before { margin: 6px 4px 10px; } /* 인셋 살짝 축소 */
     }
 
     /* 우측 스티키(단일 박스) */
@@ -109,7 +117,7 @@
 
     .people-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 
-    /* 우측 결과 카드 스티키 고정 */
+    /* 우측 결과 카드 스티키 고정(데스크톱만) */
     @media (min-width: 860px) {
       .grid.grid-2 > .card:last-child { position: sticky; top: 16px; align-self: start; }
     }
