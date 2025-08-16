@@ -188,6 +188,15 @@
       font-size: 12px;
       color: var(--muted);
     }
+
+    /* 우측 결과 카드 스티키 고정 */
+    @media (min-width: 860px) {
+      .grid.grid-2 > .card:last-child {
+        position: sticky;
+        top: 16px;
+        align-self: start;
+      }
+    }
   </style>
 </head>
 <body>
