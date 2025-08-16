@@ -44,4 +44,224 @@
     fieldset { border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; margin: 0; }
     legend { padding: 0 8px; color: var(--muted); font-size: 12px; }
     .radio-group, .checkbox-group { display: grid; gap: 6px; margin-top: 6px; }
-    label
+    label.option {
+      display: flex; justify-content: space-between; align-items: center; gap: 10px;
+      background: #1a202a; border: 1px solid #2a3446; border-radius: 10px; padding: 10px 12px; cursor: pointer; transition: border-color .15s ease;
+    }
+    label.option:hover { border-color: #334158; }
+    .option .price { color: var(--muted); font-size: 13px; }
+    input[type="radio"], input[type="checkbox"] { transform: translateY(1px); }
+    select { background: #1a202a; color: var(--text); border: 1px solid #2a3446; border-radius: 10px; padding: 10px 12px; font: inherit; }
+
+    /* 우측 결과 박스 */
+    .result {
+      background: linear-gradient(180deg, #162233 0%, #111824 100%);
+      border: 1px solid #2b3b52;
+      border-radius: 14px;
+      padding: 14px;
+    }
+    .total {
+      margin-top: 4px;
+      padding: 14px;
+      border-radius: 12px;
+      background: #19263a;
+      border: 1px solid #2b3b52;
+      display: flex; justify-content: space-between; align-items: baseline;
+    }
+    .total .label { color: #b9cbe0; font-weight: 700; }
+    .total .value { font-size: 24px; color: var(--good); font-weight: 800; }
+    .line { display: flex; justify-content: space-between; font-size: 14px; padding: 6px 0; color: #c6d7ec; }
+    .line .value { color: #cfe6ff; }
+
+    .people-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .person { background: #151b25; border: 1px solid #2a3240; border-radius: 12px; padding: 12px; }
+    .person-title { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+
+    /* 우측 결과 카드 스티키 고정 */
+    @media (min-width: 860px) {
+      .grid.grid-2 > .card:last-child { position: sticky; top: 16px; align-self: start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>커미션 견적 계산기</h1>
+    <div class="note">인원별 사이즈와 방식을 선택하고, 추가금과 가산 옵션을 선택하면 총액이 계산됩니다.</div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <div class="people-header">
+          <div class="section-title">인원 선택<span class="pill">최대 5명</span></div>
+          <div>
+            <label class="muted" for="personCount">인원</label>
+            <select id="personCount">
+              <option value="1">1명</option>
+              <option value="2">2명</option>
+              <option value="3">3명</option>
+              <option value="4">4명</option>
+              <option value="5">5명</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="personsContainer" class="grid" style="margin-top:12px;"></div>
+
+        <div class="section-title" style="margin-top:14px;">추가금</div>
+        <div class="options">
+          <fieldset>
+            <legend>컨펌 추가</legend>
+            <div class="radio-group" id="optionD">
+              <label class="option"><span>없음</span><span class="price">+0원</span><input type="radio" name="D" value="0" checked></label>
+              <label class="option"><span>1회 추가</span><span class="price">+1,000원</span><input type="radio" name="D" value="1000"></label>
+              <label class="option"><span>2회 추가</span><span class="price">+2,000원</span><input type="radio" name="D" value="2000"></label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>배경</legend>
+            <div class="radio-group" id="optionE">
+              <label class="option"><span>없음</span><span class="price">+0원</span><input type="radio" name="E" value="0" checked></label>
+              <label class="option"><span>간단 배경</span><span class="price">+1,000원</span><input type="radio" name="E" value="1000"></label>
+              <label class="option"><span>복잡 배경</span><span class="price">+3,000원</span><input type="radio" name="E" value="3000"></label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>추가 옵션</legend>
+            <div class="checkbox-group">
+              <label class="option"><span>배경 투명화</span><span class="price">+1,000원</span><input type="checkbox" id="optF" /></label>
+              <label class="option"><span>유혈</span><span class="price">+1,000원</span><input type="checkbox" id="optG" /></label>
+              <label class="option"><span>편집 추가</span><span class="price">+1,500원</span><input type="checkbox" id="optH" /></label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>가산</legend>
+            <div class="checkbox-group">
+              <label class="option"><span>샘플 비공개</span><span class="price">+기본합계의 10%</span><input type="checkbox" id="optI" /></label>
+              <label class="option"><span>48시간 빠른 마감</span><span class="price">+기본합계의 50%</span><input type="checkbox" id="optJ" /></label>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="result">
+          <div class="total">
+            <span class="label">총액</span>
+            <span id="total" class="value">0원</span>
+          </div>
+          <div class="line"><span>기본합계</span><span id="baseSum" class="value">0원</span></div>
+          <div class="line"><span>가산</span><span id="surcharge" class="value">+0원</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <template id="personTemplate">
+    <div class="person">
+      <div class="person-title"></div>
+      <div class="grid">
+        <fieldset>
+          <legend>사이즈</legend>
+          <div class="radio-group size-group">
+            <label class="option"><span>두~흉상</span><span class="price">10,000원</span><input type="radio" value="10000"></label>
+            <label class="option"><span>반신1(허리)</span><span class="price">13,000원</span><input type="radio" value="13000"></label>
+            <label class="option"><span>반신2(허벅지)</span><span class="price">16,000원</span><input type="radio" value="16000"></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>방식</legend>
+          <div class="radio-group style-group">
+            <label class="option"><span>선화</span><span class="price">+0원</span><input type="radio" value="0"></label>
+            <label class="option"><span>컬러만</span><span class="price">+2,000원</span><input type="radio" value="2000"></label>
+            <label class="option"><span>명암만</span><span class="price">+2,000원</span><input type="radio" value="2000"></label>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    const KRW = (n) => `${Math.round(n).toLocaleString('ko-KR')}원`;
+
+    const prices = {
+      F: 1000, G: 1000, H: 1500
+    };
+
+    const personCountEl = document.getElementById('personCount');
+    const personsContainer = document.getElementById('personsContainer');
+
+    const baseSumEl = document.getElementById('baseSum');
+    const surchargeEl = document.getElementById('surcharge');
+    const totalEl = document.getElementById('total');
+
+    function renderPersons(count) {
+      personsContainer.innerHTML = '';
+      const tpl = document.getElementById('personTemplate');
+      for (let i = 1; i <= count; i++) {
+        const node = tpl.content.firstElementChild.cloneNode(true);
+        node.querySelector('.person-title').textContent = `인원 ${i}`;
+        const sizeRadios = node.querySelectorAll('.size-group input[type="radio"]');
+        const styleRadios = node.querySelectorAll('.style-group input[type="radio"]');
+        sizeRadios.forEach(r => r.name = `A_${i}`);
+        styleRadios.forEach(r => r.name = `B_${i}`);
+        sizeRadios[0].checked = true;
+        styleRadios[0].checked = true;
+        personsContainer.appendChild(node);
+      }
+    }
+
+    function getPersonCost(personNode) {
+      const size = personNode.querySelector('.size-group input[type="radio"]:checked');
+      const style = personNode.querySelector('.style-group input[type="radio"]:checked');
+      const a = size ? Number(size.value) : 0;
+      const b = style ? Number(style.value) : 0;
+      return a + b;
+    }
+
+    function getFixedCosts() {
+      const d = Number((document.querySelector('#optionD input[type="radio"]:checked') || { value: 0 }).value);
+      const e = Number((document.querySelector('#optionE input[type="radio"]:checked') || { value: 0 }).value);
+      const f = document.getElementById('optF').checked ? prices.F : 0;
+      const g = document.getElementById('optG').checked ? prices.G : 0;
+      const h = document.getElementById('optH').checked ? prices.H : 0;
+      return d + e + f + g + h;
+    }
+
+    function computeAndRender() {
+      const personNodes = personsContainer.querySelectorAll('.person');
+      let m = 0;
+      personNodes.forEach(node => { m += getPersonCost(node); });
+
+      const n = getFixedCosts();
+      const base = m + n;
+
+      const iChecked = document.getElementById('optI').checked;
+      const jChecked = document.getElementById('optJ').checked;
+      const addI = iChecked ? base * 0.10 : 0;
+      const addJ = jChecked ? base * 0.50 : 0;
+      const surcharge = addI + addJ;
+
+      const total = base + surcharge;
+
+      baseSumEl.textContent = KRW(base);
+      surchargeEl.textContent = `+${KRW(surcharge)}`;
+      totalEl.textContent = KRW(total);
+    }
+
+    personCountEl.addEventListener('change', () => {
+      const count = Math.max(1, Math.min(5, Number(personCountEl.value) || 1));
+      renderPersons(count);
+      computeAndRender();
+    });
+
+    document.addEventListener('input', (e) => {
+      if (e.target.matches('input, select')) computeAndRender();
+    });
+
+    renderPersons(1);
+    computeAndRender();
+  </script>
+</body>
+</html>
