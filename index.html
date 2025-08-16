@@ -11,7 +11,6 @@
       --panel-2: #1d232c;
       --text: #e9eef5;
       --muted: #9fb0c3;
-      --accent: #6ea8fe;
       --accent-2: #8bd3ff;
       --border: #2a3240;
       --good: #9fe6a0;
@@ -70,8 +69,7 @@
     }
     .total .label { color: #b9cbe0; font-weight: 700; }
     .total .value { font-size: 24px; color: var(--good); font-weight: 800; }
-    .line { display: flex; justify-content: space-between; font-size: 14px; padding: 6px 0; color: #c6d7ec; }
-    .line .value { color: #cfe6ff; }
+    .kicker { color: var(--muted); font-size: 12px; margin-top: 10px; }
 
     .people-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
     .person { background: #151b25; border: 1px solid #2a3240; border-radius: 12px; padding: 12px; }
@@ -151,8 +149,8 @@
             <span class="label">총액</span>
             <span id="total" class="value">0원</span>
           </div>
-          <div class="line"><span>기본합계</span><span id="baseSum" class="value">0원</span></div>
-          <div class="line"><span>가산</span><span id="surcharge" class="value">+0원</span></div>
+          <div class="kicker">모든 금액은 KRW(원) 기준입니다.</div>
+          <div class="kicker">사이트에 오류가 있다면 메시지 주세요.</div>
         </div>
       </div>
     </div>
@@ -185,15 +183,10 @@
   <script>
     const KRW = (n) => `${Math.round(n).toLocaleString('ko-KR')}원`;
 
-    const prices = {
-      F: 1000, G: 1000, H: 1500
-    };
+    const prices = { F: 1000, G: 1000, H: 1500 };
 
     const personCountEl = document.getElementById('personCount');
     const personsContainer = document.getElementById('personsContainer');
-
-    const baseSumEl = document.getElementById('baseSum');
-    const surchargeEl = document.getElementById('surcharge');
     const totalEl = document.getElementById('total');
 
     function renderPersons(count) {
@@ -241,12 +234,8 @@
       const jChecked = document.getElementById('optJ').checked;
       const addI = iChecked ? base * 0.10 : 0;
       const addJ = jChecked ? base * 0.50 : 0;
-      const surcharge = addI + addJ;
+      const total = base + addI + addJ;
 
-      const total = base + surcharge;
-
-      baseSumEl.textContent = KRW(base);
-      surchargeEl.textContent = `+${KRW(surcharge)}`;
       totalEl.textContent = KRW(total);
     }
 
