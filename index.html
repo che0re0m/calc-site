@@ -42,28 +42,17 @@
       gap: 12px;
       margin-bottom: 4px;
     }
-    .logo-icon {
-      width: 24px;
-      height: 24px;
-      flex-shrink: 0;
-    }
     .brand-name {
-      font-family: 'Roboto', sans-serif;
-      font-size: 24px;
+      font-family: 'Noto Sans KR', 'Roboto', sans-serif;
+      font-size: 22px;
       font-weight: 700;
       color: var(--accent-2);
       letter-spacing: 0.5px;
     }
-    .service-name {
-      font-size: 18px;
-      font-weight: 500;
-      color: var(--text);
-      margin-left: 8px;
-    }
     .version-info {
       font-size: 12px;
       color: var(--muted);
-      margin-left: 36px;
+      margin-left: 0;
       font-weight: 400;
     }
     
@@ -174,7 +163,7 @@
       padding: 8px 16px;
       font-size: 13px;
       cursor: pointer;
-      margin-top: 12px;
+      margin-top: 8px;
       width: 100%;
       transition: all 0.15s ease;
     }
@@ -182,6 +171,31 @@
       background: #3a4452;
       border-color: #4a5462;
       color: var(--text);
+    }
+
+    .apply-btn {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      color: white;
+      border: 0;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      width: 100%;
+      transition: all 0.15s ease;
+    }
+    .apply-btn:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+      transform: translateY(-1px);
+    }
+
+    .button-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
     }
 
     .hint {
@@ -202,15 +216,9 @@
   <div class="container">
     <div class="header">
       <div class="header-main">
-        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="#8bd3ff"/>
-          <path d="M8 12c0-2.21 1.79-4 4-4s4 1.79 4 4-1.79 4-4 4-4-1.79-4-4z" fill="#8bd3ff"/>
-          <path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" fill="#8bd3ff"/>
-        </svg>
-        <span class="brand-name">CHE0RE0M</span>
-        <span class="service-name">커미션 견적</span>
+        <span class="brand-name">CHE0RE0M 커미션 견적</span>
       </div>
-      <div class="version-info">ver.2024.12.19</div>
+      <div class="version-info">ver.25.08.17</div>
     </div>
     
     <div class="note">
@@ -287,7 +295,10 @@
           <div class="kicker">모든 금액은 KRW(원) 기준입니다.</div>
           <div class="kicker">사이트에 오류가 있다면 메시지 주세요.</div>
           <div class="kicker">최종 금액은 협의에 따라 변동될 수 있습니다.</div>
-          <button id="resetBtn" class="reset-btn">선택 초기화</button>
+          <div class="button-group">
+            <button id="resetBtn" class="reset-btn">선택 초기화</button>
+            <button id="applyBtn" class="apply-btn">커미션 신청하러 가기</button>
+          </div>
         </div>
       </div>
     </div>
@@ -333,6 +344,7 @@
     const summaryEl = document.getElementById('summary');
     const toggleSummaryBtn = document.getElementById('toggleSummary');
     const resetBtn = document.getElementById('resetBtn');
+    const applyBtn = document.getElementById('applyBtn');
 
     function resetToDefaults() {
       // 인원 수를 1명으로 초기화
@@ -531,6 +543,11 @@
     });
 
     resetBtn.addEventListener('click', resetToDefaults);
+
+    applyBtn.addEventListener('click', () => {
+      // 커미션 신청 페이지로 이동
+      window.open('https://crepe.cm/@CHE0RE0M/xc350658', '_blank');
+    });
 
     // init
     renderPersons(1);
