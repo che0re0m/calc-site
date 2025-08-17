@@ -4,6 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>커미션 견적 계산기</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #0f1216;
@@ -23,12 +26,47 @@
                   radial-gradient(800px 600px at 110% 10%, #1a2230 0%, transparent 60%),
                   var(--bg);
       color: var(--text);
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Apple SD Gothic Neo, "Malgun Gothic", sans-serif;
+      font-family: 'Noto Sans KR', 'Roboto', sans-serif;
       line-height: 1.45;
       font-variant-numeric: tabular-nums;
     }
     .container { max-width: 980px; padding: 24px; margin: 0 auto; }
-    h1 { font-size: 22px; font-weight: 700; margin: 0 0 16px; letter-spacing: .2px; }
+    
+    /* 헤더 스타일 */
+    .header {
+      margin-bottom: 20px;
+    }
+    .header-main {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+    .logo-icon {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    .brand-name {
+      font-family: 'Roboto', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--accent-2);
+      letter-spacing: 0.5px;
+    }
+    .service-name {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text);
+      margin-left: 8px;
+    }
+    .version-info {
+      font-size: 12px;
+      color: var(--muted);
+      margin-left: 36px;
+      font-weight: 400;
+    }
+    
     .note { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
     .grid { display: grid; gap: 16px; }
     @media (min-width: 860px) { .grid-2 { grid-template-columns: 1.2fr .8fr; } }
@@ -162,7 +200,19 @@
 </head>
 <body>
   <div class="container">
-    <h1>커미션 견적 계산기</h1>
+    <div class="header">
+      <div class="header-main">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="#8bd3ff"/>
+          <path d="M8 12c0-2.21 1.79-4 4-4s4 1.79 4 4-1.79 4-4 4-4-1.79-4-4z" fill="#8bd3ff"/>
+          <path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" fill="#8bd3ff"/>
+        </svg>
+        <span class="brand-name">CHE0RE0M</span>
+        <span class="service-name">커미션 견적</span>
+      </div>
+      <div class="version-info">ver.2024.12.19</div>
+    </div>
+    
     <div class="note">
       인원별 사이즈와 방식을 선택하고, 추가금 옵션을 선택하면 총액이 계산됩니다.<br />
       총액은 캔버스 한 장당 가격입니다.
