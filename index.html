@@ -128,6 +128,24 @@
     }
     .kicker { color: var(--muted); font-size: 12px; margin-top: 4px; }
 
+    .reset-btn {
+      background: #2a3240;
+      color: var(--muted);
+      border: 1px solid #3a4452;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 13px;
+      cursor: pointer;
+      margin-top: 12px;
+      width: 100%;
+      transition: all 0.15s ease;
+    }
+    .reset-btn:hover {
+      background: #3a4452;
+      border-color: #4a5462;
+      color: var(--text);
+    }
+
     .hint {
       color: var(--warn);
       font-size: 12px;
@@ -219,6 +237,7 @@
           <div class="kicker">모든 금액은 KRW(원) 기준입니다.</div>
           <div class="kicker">사이트에 오류가 있다면 메시지 주세요.</div>
           <div class="kicker">최종 금액은 협의에 따라 변동될 수 있습니다.</div>
+          <button id="resetBtn" class="reset-btn">선택 초기화</button>
         </div>
       </div>
     </div>
@@ -263,6 +282,38 @@
     const totalEl = document.getElementById('total');
     const summaryEl = document.getElementById('summary');
     const toggleSummaryBtn = document.getElementById('toggleSummary');
+    const resetBtn = document.getElementById('resetBtn');
+
+    function resetToDefaults() {
+      // 인원 수를 1명으로 초기화
+      personCountEl.value = '1';
+      renderPersons(1);
+
+      // 모든 라디오 버튼을 첫 번째 옵션으로 초기화
+      document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        if (radio.name.startsWith('A_') || radio.name.startsWith('B_')) {
+          // 인원별 사이즈/방식은 첫 번째 옵션 선택
+          if (radio.value === '10000' || radio.value === '0') {
+            radio.checked = true;
+          }
+        } else if (radio.name === 'D' || radio.name === 'E') {
+          // 추가금 옵션은 0원 옵션 선택
+          if (radio.value === '0') {
+            radio.checked = true;
+          }
+        }
+      });
+
+      // 모든 체크박스 해제
+      document.getElementById('optF').checked = false;
+      document.getElementById('optG').checked = false;
+      document.getElementById('optH').checked = false;
+      document.getElementById('optI').checked = false;
+      document.getElementById('optJ').checked = false;
+
+      // 계산 및 렌더링 업데이트
+      computeAndRender();
+    }
 
     function renderPersons(count) {
       personsContainer.innerHTML = '';
@@ -428,6 +479,8 @@
       toggleSummaryBtn.setAttribute('aria-expanded', String(!open));
       summaryEl.classList.toggle('open', !open);
     });
+
+    resetBtn.addEventListener('click', resetToDefaults);
 
     // init
     renderPersons(1);
